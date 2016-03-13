@@ -103,13 +103,11 @@ function timeSpanToString(startDate, endDate) {
 function angleBetweenClockHands(date) {
     var mm = date.getUTCMinutes();
     var hh = date.getUTCHours()>=12?date.getUTCHours()-12:date.getUTCHours();
-    var mmAngle=2*Math.PI/60*mm;
-    var hhAngle=2*Math.PI/12*hh+2*Math.PI/12/60*mm;
-    var delta=Math.abs(mmAngle-hhAngle);
-    if(delta>Math.PI){
-        delta=2*Math.PI-delta;
-    }
-    return delta;
+    var mmAngle=6*mm;
+    var hhAngle=30*hh+0.5*mm;
+    var angle=Math.abs(mmAngle-hhAngle);
+    angle=Math.min(angle,360-angle);
+    return Math.PI*angle/180;
 }
 
 
