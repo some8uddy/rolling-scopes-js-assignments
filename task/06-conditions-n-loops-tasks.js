@@ -116,12 +116,12 @@ function isTriangle(a, b, c) {
  *     -------------
  *     |           |
  *     |           |  height = 10
- *     ------------- 
- *        width=20    
- * 
+ *     -------------
+ *        width=20
+ *
  * NOTE: Please use canvas coordinate space (https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#The_grid),
  * it differs from Cartesian coordinate system.
- * 
+ *
  * @param {object} rect1
  * @param {object} rect2
  * @return {bool}
@@ -284,9 +284,9 @@ function reverseInteger(num) {
  *   4916123456789012 => false
  */
 function isCreditCardNumber(ccn) {
-    ccn = ccn.toString().split('').map(el => parseInt(el)
-)
-    ;
+    ccn = ccn.toString().split('').map(function (el) {
+        return parseInt(el)
+    });
     var sum = 0;
     for (let i = 1; i <= ccn.length; i++) {
         let p = ccn[ccn.length - i];
@@ -317,14 +317,12 @@ function isCreditCardNumber(ccn) {
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
 function getDigitalRoot(num) {
-    throw new Error('Not implemented');
-    //debugger;
-    //while (num > 9) {
-    //    num = num.toString().split('').reduce(function (sum, el, ind) {
-    //        return ind < 16 && !isNaN(el) ? parseInt(sum) + parseInt(el) : sum;
-    //    });
-    //};
-    //return num;
+    while (num > 9) {
+        num = num.toString().split('').reduce(function (sum, el, ind) {
+            return ind < 16 && !isNaN(el) ? parseInt(sum) + parseInt(el) : sum;
+        });
+    }
+    return num;
 }
 
 
@@ -350,7 +348,25 @@ function getDigitalRoot(num) {
  *   '{[(<{[]}>)]}' = true 
  */
 function isBracketsBalanced(str) {
-    throw new Error('Not implemented');
+    var result = [];
+    for (let i = 0; i < str.length; i++) {
+        let currBracket = str.charAt(i);
+        let prevBracket = result[result.length - 1];
+        if (result.length < 1) {
+            result.push(currBracket);
+        } else if (prevBracket === '[' && currBracket === ']') {
+            result.pop();
+        } else if (prevBracket === '{' && currBracket === '}') {
+            result.pop();
+        } else if (prevBracket === '(' && currBracket === ')') {
+            result.pop();
+        } else if (prevBracket === '<' && currBracket === '>') {
+            result.pop();
+        } else {
+            result.push(currBracket);
+        }
+    }
+    return result.length === 0;
 }
 
 
@@ -386,7 +402,52 @@ function isBracketsBalanced(str) {
  *
  */
 function timespanToHumanString(startDate, endDate) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    function myRound(x) {
+        return x > (Math.ceil(x) + Math.floor(x)) / 2 ? Math.ceil(x) : Math.floor(x);
+    };
+    let time = (endDate - startDate);
+    let sec = 1000;
+    let min = sec * 60;
+    let hour = min * 60;
+    let day = hour * 24;
+    let month = day * 30;
+    let year = day * 365;
+    switch (true) {
+        case time <= sec * 45:
+            return 'a few seconds ago';
+            break;
+        case time > sec * 45 && time <= sec * 90:
+            return 'a minute ago';
+            break;
+        case time > sec * 90 && time <= min * 45:
+            return `${myRound(time / min)} minutes ago`;
+            break;
+        case time > min * 45 && time <= min * 90:
+            return `an hour ago`;
+            break;
+        case time > min * 90 && time <= hour * 22:
+            return `${myRound(time / hour)} hours ago`;
+            break;
+        case time > hour * 22 && time <= hour * 36:
+            return `a day ago`;
+            break;
+        case time > hour * 36 && time <= day * 25:
+            return `${myRound(time / day)} days ago`;
+            break;
+        case time > day * 25 && time <= day * 45:
+            return `a month ago`;
+            break;
+        case time > day * 45 && time <= day * 345:
+            return `${myRound(time / month)} months ago`;
+            break;
+        case time > day * 345 && time <= day * 545:
+            return `a year ago`;
+            break;
+        case time > day * 545:
+            return `${myRound(time / year)} years ago`;
+            break;
+    }
 }
 
 
@@ -410,7 +471,7 @@ function timespanToHumanString(startDate, endDate) {
  *    365, 10 => '365'
  */
 function toNaryString(num, n) {
-    throw new Error('Not implemented');
+    return num.toString(n);
 }
 
 
@@ -427,7 +488,20 @@ function toNaryString(num, n) {
  *   ['/web/favicon.ico', '/web-scripts/dump', '/webalizer/logs'] => '/'
  */
 function getCommonDirectoryPath(pathes) {
-    throw new Error('Not implemented');
+    let result = pathes[0].substring(0, pathes[0].lastIndexOf('/') + 1);
+    let changesHappend;
+    do {
+        changesHappend = false;
+        for (let i = 1; i < pathes.length; i++) {
+            if (pathes[i].indexOf(result) != 0) {
+                result = result.slice(0, -1);
+                result = result.substring(0, result.lastIndexOf('/') + 1);
+                changesHappend = true;
+                break;
+            }
+        }
+    } while (changesHappend)
+    return result;
 }
 
 
@@ -450,7 +524,17 @@ function getCommonDirectoryPath(pathes) {
  *
  */
 function getMatrixProduct(m1, m2) {
-    throw new Error('Not implemented');
+    let result = [];
+    for (let i = 0; i < m1.length; i++) {
+        result.push([]);
+        for (let j = 0; j < m2[0].length; j++) {
+            result[i][j] = 0;
+            for (let k = 0; k < m2.length; k++) {
+                result[i][j] = result[i][j] + m1[i][k] * m2[k][j];
+            }
+        }
+    }
+    return result;
 }
 
 
@@ -484,8 +568,24 @@ function getMatrixProduct(m1, m2) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(position) {
-    throw new Error('Not implemented');
+function evaluateTicTacToePosition(p) {
+    if (p[0][0] != undefined && p[0][0] === p[0][1] && p[0][1] == p[0][2]) {
+        return p[0][0];
+    } else if (p[1][0] != undefined && p[1][0] === p[1][1] && p[1][1] == p[1][2]) {
+        return p[1][0];
+    } else if (p[2][0] != undefined && p[2][0] === p[2][1] && p[2][1] == p[2][2]) {
+        return p[2][0];
+    } else if (p[0][0] != undefined && p[0][0] === p[1][0] && p[1][0] == p[2][0]) {
+        return p[0][0];
+    } else if (p[0][1] != undefined && p[0][1] === p[1][1] && p[1][1] == p[2][1]) {
+        return p[0][1];
+    } else if (p[0][2] != undefined && p[0][2] === p[1][2] && p[1][2] == p[2][2]) {
+        return p[0][2];
+    } else if (p[0][0] != undefined && p[0][0] === p[1][1] && p[1][1] == p[2][2]) {
+        return p[0][0];
+    } else if (p[0][2] != undefined && p[0][2] === p[1][1] && p[1][1] == p[2][0]) {
+        return p[0][2];
+    }
 }
 
 
