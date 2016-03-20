@@ -68,7 +68,7 @@ function getStringFromTemplate(firstName, lastName) {
  *   'Hello, Chuck Norris!' => 'Chuck Norris'
  */
 function extractNameFromTemplate(value) {
-    return value.substring(7, value.length - 1);
+    return value.slice(7, -1);
 }
 
 
@@ -220,23 +220,20 @@ function getRectangleString(width, height) {
  *
  */
 function encodeToRot13(str) {
-    var res = "";
-    for (var i in str) {
-        if (str[i].match(/\w/)) {
-            var a = str.charCodeAt(i);
-            if (a <= 90) {
-                a=a+13;
-                a = a <= 90 ? a : a-26;
-            } else {
-                a=a+13;
-                a = a <= 122 ? a : a-26;
-            }
-            res += String.fromCharCode(a);
+    const lettersCount = 26;
+    const lowercaseOffset = 'z'.charCodeAt(0);
+    const uppercaseOffset = 'Z'.charCodeAt(0);
+    return str.replace(/\w/g, function (letter) {
+        let letterCode = letter.charCodeAt(0);
+        if (letterCode <= uppercaseOffset) {
+            letterCode = letterCode + 13;
+            letterCode = letterCode <= uppercaseOffset ? letterCode : letterCode - lettersCount;
         } else {
-            res += str[i];
+            letterCode = letterCode + 13;
+            letterCode = letterCode <= lowercaseOffset ? letterCode : letterCode - lettersCount;
         }
-    }
-    return res;
+        return String.fromCharCode(letterCode);
+    });
 }
 
 /**
@@ -253,7 +250,7 @@ function encodeToRot13(str) {
  *   isString(new String('test')) => true
  */
 function isString(value) {
-    return Object.prototype.toString.call(value)=='[object String]';
+    return Object.prototype.toString.call(value) == '[object String]';
 }
 
 
@@ -282,33 +279,7 @@ function isString(value) {
  *   'K♠' => 51
  */
 function getCardId(value) {
-    var result=0;
-    switch (value.charAt(value.length-1)){
-        case "♦":
-            result=13;
-            break;
-        case "♥":
-            result=26;
-            break;
-        case "♠":
-            result=39;
-    }
-    switch (value.substring(0,value.length-1)){
-        case "A":
-            break;
-        case "J":
-            result+=10;
-            break;
-        case "Q":
-            result+=11;
-            break;
-        case "K":
-            result+=12;
-            break;
-        default:
-            result+=parseInt(value.substring(0,value.length-1)-1);
-    }
-    return result;
+    return '♣♦♥♠'.indexOf(value.slice(-1))*13 +'A234567891JQK'.indexOf(value.slice(0,1));
 }
 
 

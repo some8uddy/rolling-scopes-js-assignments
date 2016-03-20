@@ -111,7 +111,8 @@ function getLinearEquationRoot(a, b) {
  *   (0,1) (1,2)     => 0
  */
 function getAngleBetweenVectors(x1, y1, x2, y2) {
-    return Math.acos((x1*x2+y1*y2)/(Math.hypot(x1,y1)/Math.hypot(x2,y2)));
+    debugger;
+    return Math.abs(Math.atan2(y1,x1)-Math.atan2(y2,x2));
 }
 
 /**
@@ -127,7 +128,7 @@ function getAngleBetweenVectors(x1, y1, x2, y2) {
  *     0     => 0
  */
 function getLastDigit(value) {
-    return value.toString().charAt(value.toString().length-1);
+    return value%10;
 }
 
 
@@ -181,7 +182,8 @@ function getParallelipidedDiagonal(a,b,c) {
  *   1678, 3  => 2000
  */
 function roundToPowerOfTen(num, pow) {
-    return Math.round(num/Math.pow(10,pow))*Math.pow(10,pow);
+    var roundingLevel=Math.pow(10,pow);
+    return Math.round(num/roundingLevel)*roundingLevel;
 }
 
 /**
@@ -205,11 +207,10 @@ function isPrime(n) {
     var result=true;
     for(var i=2; i<=Math.sqrt(n);i++){
         if(n%i==0) {
-            result = false;
-            break;
+            return false;
         }
     }
-    return result;
+    return true;
 }
 
 /**

@@ -57,13 +57,7 @@ function parseDataFromIso8601(value) {
  */
 function isLeapYear(date) {
     var year = new Date(date).getFullYear();
-    if (year % 4 == 0 && year % 100 != 0) {
-        return true;
-    } else if (year % 400 == 0) {
-        return true;
-    } else {
-        return false;
-    }
+    return (year % 4 == 0) && ((year % 400 == 0) || (year % 100 != 0));
 }
 
 
@@ -102,7 +96,7 @@ function timeSpanToString(startDate, endDate) {
  */
 function angleBetweenClockHands(date) {
     var mm = date.getUTCMinutes();
-    var hh = date.getUTCHours()>=12?date.getUTCHours()-12:date.getUTCHours();
+    var hh = date.getUTCHours()%12;
     var mmAngle=6*mm;
     var hhAngle=30*hh+0.5*mm;
     var angle=Math.abs(mmAngle-hhAngle);

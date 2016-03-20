@@ -583,14 +583,14 @@ function distinct(arr) {
 function group(array, keySelector, valueSelector) {
     var result = new Map();
     array.map(function (el) {
-        var tmpArr = new Array();
+        var tmpArr = [];
         var key = keySelector(el);
         var value = valueSelector(el);
         if (result.has(key)) {
-            tmpArr.push(result.get(key));
+            tmpArr=result.get(key);
         }
         tmpArr.push(value);
-        result.set(key, value);
+        result.set(key, tmpArr);
     });
     return result
 }
