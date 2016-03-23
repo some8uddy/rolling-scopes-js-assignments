@@ -23,11 +23,12 @@
  *    console.log(r.getArea());   // => 200
  */
 function Rectangle(width, height) {
-    return {
-        width:width,
-        height:height,
-        getArea(){return this.width*this.height}
-    }
+    this.width = width;
+    this.height = height;
+}
+
+Rectangle.prototype.getArea = function () {
+    return this.width * this.height;
 }
 
 
@@ -58,7 +59,7 @@ function getJSON(obj) {
  *
  */
 function fromJSON(proto, json) {
-    throw new Error('Not implemented');
+    return Object.setPrototypeOf(JSON.parse(json), proto);
 }
 
 
@@ -109,35 +110,78 @@ function fromJSON(proto, json) {
  *
  *  For more examples see unit tests.
  */
+var Builder = function () {
+    this.str = '';
+};
+
+Builder.prototype.element = function (value) {
+    this.str += value;
+    return this;
+};
+
+Builder.prototype.id = function (value) {
+    this.str += `#${value}`;
+    return this;
+};
+
+Builder.prototype.class = function (value) {
+    this.str += `.${value}`;
+    return this;
+};
+
+Builder.prototype.attr = function (value) {
+    this.str += `[${value}]`;
+    return this;
+};
+
+Builder.prototype.pseudoClass = function (value) {
+    this.str += `:${value}`;
+    return this;
+};
+
+Builder.prototype.pseudoElement = function (value) {
+    this.str += `::${value}`;
+    return this;
+};
+
+Builder.prototype.stringify = function () {
+    return this.str;
+};
+
+Builder.prototype.combine = function (selector1, combinator, selector2) {
+    //????????????
+    return this;
+};
 
 const cssSelectorBuilder = {
 
-    element: function(value) {
-        throw new Error('Not implemented');
+    element: function (value) {
+        return new Builder().element(value);
     },
 
-    id: function(value) {
-        throw new Error('Not implemented');
+    id: function (value) {
+        return new Builder().id(value);
     },
 
-    class: function(value) {
-        throw new Error('Not implemented');
+    class: function (value) {
+        return new Builder().class(value);
     },
 
-    attr: function(value) {
-        throw new Error('Not implemented');
+    attr: function (value) {
+        return new Builder().attr(value);
     },
 
-    pseudoClass: function(value) {
-        throw new Error('Not implemented');
+    pseudoClass: function (value) {
+        return new Builder().pseudoClass(value);
     },
 
-    pseudoElement: function(value) {
-        throw new Error('Not implemented');
+    pseudoElement: function (value) {
+        return new Builder().pseudoElement(value);
     },
 
-    combine: function(selector1, combinator, selector2) {
+    combine: function (selector1, combinator, selector2) {
         throw new Error('Not implemented');
+        //return new Builder().combine(selector1, combinator, selector2)
     },
 };
 
