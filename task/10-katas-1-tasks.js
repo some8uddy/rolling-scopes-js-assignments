@@ -17,8 +17,21 @@
  *  ]
  */
 function createCompassPoints() {
-    throw new Error('Not implemented');
-    var sides = ['N','E','S','W'];  // use array of cardinal directions only!
+    function getDirection(i) {
+        var j = i % 8;
+        var i = Math.floor(i / 8) % 4;
+        var sides = ['N', 'E', 'S', 'W'];
+        var intermed = '1,1b2,1C,Cb1,C,Cb2,2C,2b1';
+        var str1 = sides[i];
+        var str2 = sides[(i + 1) % 4];
+        var strC = (str1 === 'N' || str1 === 'S') ? str1 + str2 : str2 + str1;
+        return intermed.split(",")[j].replace('1', str1).replace('2', str2).replace('C', strC);
+    }
+    var result=[];
+    for (let i = 0; i < 32; i ++) {
+        result.push({ "abbreviation" : getDirection(i), "azimuth" : i * 11.25});
+    }
+    return result;
 }
 
 
@@ -57,6 +70,47 @@ function createCompassPoints() {
  */
 function* expandBraces(str) {
     throw new Error('Not implemented');
+
+    function parse(expression,index){
+        index=index||0;
+        var resultArray=[];
+        var elements=[''];
+        while(index<expression.length){
+            if(expression.charAt(index)=='{'){
+                index++;
+                var tmp=parse(expression,index);
+                var newElements=[];
+                for(let e in elements){
+                    for(let t in tmp){
+                        newElements.push(elements[e].concat(tmp[t]));
+                    }
+                }
+                elements=newElements;
+
+            }else if(expression.charAt(index)==','){
+                [].push.apply(resultArray,elements);
+                elements=[''];
+                index++;
+
+            }else if(expression.charAt(index)=='}'){
+                index++;
+                [].push.apply(resultArray,elements);
+                return resultArray;
+
+            }else{
+                for(let e in elements){
+                    elements[e]+=expression.charAt(index);
+                }
+                index++;
+            }
+        }
+        return elements;
+    }
+
+
+
+
+
 }
 
 
@@ -141,9 +195,9 @@ function extractRanges(nums) {
 }
 
 module.exports = {
-    createCompassPoints : createCompassPoints,
-    expandBraces : expandBraces,
-    getZigZagMatrix : getZigZagMatrix,
-    canDominoesMakeRow : canDominoesMakeRow,
-    extractRanges : extractRanges
+    createCompassPoints: createCompassPoints,
+    expandBraces: expandBraces,
+    getZigZagMatrix: getZigZagMatrix,
+    canDominoesMakeRow: canDominoesMakeRow,
+    extractRanges: extractRanges
 };
