@@ -27,9 +27,10 @@ function createCompassPoints() {
         var strC = (str1 === 'N' || str1 === 'S') ? str1 + str2 : str2 + str1;
         return intermed.split(",")[j].replace('1', str1).replace('2', str2).replace('C', strC);
     }
-    var result=[];
-    for (let i = 0; i < 32; i ++) {
-        result.push({ "abbreviation" : getDirection(i), "azimuth" : i * 11.25});
+
+    var result = [];
+    for (let i = 0; i < 32; i++) {
+        result.push({"abbreviation": getDirection(i), "azimuth": i * 11.25});
     }
     return result;
 }
@@ -70,47 +71,6 @@ function createCompassPoints() {
  */
 function* expandBraces(str) {
     throw new Error('Not implemented');
-
-    function parse(expression,index){
-        index=index||0;
-        var resultArray=[];
-        var elements=[''];
-        while(index<expression.length){
-            if(expression.charAt(index)=='{'){
-                index++;
-                var tmp=parse(expression,index);
-                var newElements=[];
-                for(let e in elements){
-                    for(let t in tmp){
-                        newElements.push(elements[e].concat(tmp[t]));
-                    }
-                }
-                elements=newElements;
-
-            }else if(expression.charAt(index)==','){
-                [].push.apply(resultArray,elements);
-                elements=[''];
-                index++;
-
-            }else if(expression.charAt(index)=='}'){
-                index++;
-                [].push.apply(resultArray,elements);
-                return resultArray;
-
-            }else{
-                for(let e in elements){
-                    elements[e]+=expression.charAt(index);
-                }
-                index++;
-            }
-        }
-        return elements;
-    }
-
-
-
-
-
 }
 
 
@@ -142,7 +102,59 @@ function* expandBraces(str) {
  *
  */
 function getZigZagMatrix(n) {
-    throw new Error('Not implemented');
+    var counter = 0, x = 0, y = 0;
+
+    function right() {
+        x++;
+        setNumber();
+    }
+
+    function down() {
+        y++;
+        setNumber();
+    }
+
+    function downLeft() {
+        x--;
+        y++;
+        setNumber();
+    }
+
+    function upRight() {
+        x++;
+        y--;
+        setNumber();
+    }
+
+    function setNumber() {
+        result[y][x] = counter++;
+    }
+
+    var result = [];
+    for (let i = 0; i < n; i++) {
+        result.push(new Array(n))
+    }
+    ;
+    setNumber();
+    while (counter < n * n) {
+        if (x < n - 1) {
+            right();
+        } else {
+            down();
+        }
+        while (x > 0 && y < n - 1) {
+            downLeft();
+        }
+        if (y < n - 1) {
+            down();
+        } else {
+            right();
+        }
+        while (x < n - 1 && y > 0) {
+            upRight();
+        }
+    }
+    return result;
 }
 
 
@@ -191,7 +203,26 @@ function canDominoesMakeRow(dominoes) {
  * [ 1, 2, 4, 5]          => '1,2,4,5'
  */
 function extractRanges(nums) {
-    throw new Error('Not implemented');
+    var i = 0, result ='';
+    while (i < nums.length) {
+        let first = nums[i], last = first;
+        while (nums[i+1] == last+1) {
+            last++;
+            i++;
+        }
+        switch (last-first){
+            case 0:
+                result+=first+',';
+                break;
+            case 1:
+                result+=first+','+last+',';
+                break;
+            default:
+                result+=first+'-'+last+',';
+        }
+        i++;
+    }
+    return result.slice(0,-1);
 }
 
 module.exports = {

@@ -34,7 +34,81 @@
  *
  */
 function parseBankAccount(bankAccount) {
-    throw new Error('Not implemented');
+    var numberWide = 3;
+    var numberCount = 9;
+    var result=0;
+
+    var Letter = function () {
+    }
+
+    Letter.prototype.at = function (i) {
+        this.i = i;
+        this.topLine = this.i * numberWide;
+        this.midLine = this.i * numberWide+ numberCount * numberWide+1;
+        this.bottLine =this.i * numberWide+2* numberCount * numberWide+2;
+        return this;
+    };
+
+    Letter.prototype.centerTop = function () {
+        return bankAccount.charAt(this.topLine + 1)
+    };
+    Letter.prototype.centerMiddle = function () {
+        return bankAccount.charAt(this.midLine + 1)
+    };
+    Letter.prototype.centerBottom = function () {
+        return bankAccount.charAt(this.bottLine + 1)
+    };
+
+    Letter.prototype.leftMiddle = function () {
+        return bankAccount.charAt(this.midLine)
+    };
+    Letter.prototype.leftBottom = function () {
+        return bankAccount.charAt(this.bottLine)
+    };
+
+    Letter.prototype.rightMiddle = function () {
+        return bankAccount.charAt(this.midLine + 2)
+    };
+    Letter.prototype.rightBottom = function () {
+        return bankAccount.charAt(this.bottLine + 2)
+    };
+
+    for (let i = 0; i < 9; i++) {
+        debugger;
+        let l = new Letter().at(i) ;
+        switch (true){
+            case (l.centerMiddle()==' '&&l.centerBottom()=='_'):
+                result=result*10+0;
+                break;
+            case (l.centerTop()==' '&&l.centerMiddle()==' '):
+                result=result*10+1;
+                break;
+            case (l.rightBottom()==' '):
+                result=result*10+2;
+                break;
+            case (l.leftMiddle()=='|'&&l.centerTop()==' '):
+                result=result*10+4;
+                break;
+            case (l.centerBottom()==' '&&l.centerTop()=='_'):
+                result=result*10+7;
+                break;
+            case (l.leftBottom()==' '&&l.leftMiddle()==' '):
+                result=result*10+3;
+                break;
+            case (l.leftBottom()==' '&&l.rightMiddle()==' '):
+                result=result*10+5;
+                break;
+            case (l.leftBottom()==' '&&l.rightMiddle()=='|'):
+                result=result*10+9;
+                break;
+            case (l.rightMiddle()==' '):
+                result=result*10+6;
+                break;
+            default:
+                result=result*10+8;
+        }
+    }
+    return result;
 }
 
 
@@ -110,10 +184,10 @@ function getPokerHandRank(hand) {
  * The task is to break the figure in the rectangles it is made of.
  *
  * NOTE: The order of rectanles does not matter.
- * 
+ *
  * @param {string} figure
  * @return {Iterable.<string>} decomposition to basic parts
- * 
+ *
  * @example
  *
  *    '+------------+\n'+
@@ -135,12 +209,12 @@ function getPokerHandRank(hand) {
  *    '+-------------+\n'
  */
 function* getFigureRectangles(figure) {
-   throw new Error('Not implemented');
+    throw new Error('Not implemented');
 }
 
 
 module.exports = {
-    parseBankAccount : parseBankAccount,
+    parseBankAccount: parseBankAccount,
     wrapText: wrapText,
     PokerRank: PokerRank,
     getPokerHandRank: getPokerHandRank,
