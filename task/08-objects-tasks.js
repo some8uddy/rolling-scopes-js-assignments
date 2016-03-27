@@ -110,36 +110,88 @@ function fromJSON(proto, json) {
  *
  *  For more examples see unit tests.
  */
+const ORDER={
+    element: 1,
+    id: 2,
+    class: 3,
+    attr: 4,
+    pseudoClass: 5,
+    pseudoElement: 6
+};
+
+const ORDER_ERROR=
+    new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+
+const COUNTER_ERROR=
+    new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+
 var Builder = function () {
     this.str = '';
+    this.elementCounter=0;
+    this.idCounter=0;
+    this.pseudoElementCounter=0;
+    this.order=0;
 };
 
 Builder.prototype.element = function (value) {
+    if(this.order>ORDER.element){
+        throw ORDER_ERROR;
+    };
+    this.order=ORDER.element;
+    if(++this.elementCounter>1){
+        throw COUNTER_ERROR;
+    };
     this.str += value;
     return this;
 };
 
 Builder.prototype.id = function (value) {
+    if(this.order>ORDER.id){
+        throw ORDER_ERROR;
+    };
+    this.order=ORDER.id;
+    if(++this.idCounter>1){
+        throw COUNTER_ERROR;
+    };
     this.str += `#${value}`;
     return this;
 };
 
 Builder.prototype.class = function (value) {
+    if(this.order>ORDER.class){
+        throw ORDER_ERROR;
+    };
+    this.order=ORDER.class;
     this.str += `.${value}`;
     return this;
 };
 
 Builder.prototype.attr = function (value) {
+    if(this.order>ORDER.attr){
+        throw ORDER_ERROR;
+    };
+    this.order=ORDER.attr;
     this.str += `[${value}]`;
     return this;
 };
 
 Builder.prototype.pseudoClass = function (value) {
+    if(this.order>ORDER.pseudoClass){
+        throw ORDER_ERROR;
+    };
+    this.order=ORDER.pseudoClass;
     this.str += `:${value}`;
     return this;
 };
 
 Builder.prototype.pseudoElement = function (value) {
+    if(this.order>ORDER.pseudoElement){
+        throw ORDER_ERROR;
+    };
+    this.order=ORDER.pseudoElement;
+    if(++this.pseudoElementCounter>1){
+        throw COUNTER_ERROR;
+    };
     this.str += `::${value}`;
     return this;
 };
@@ -149,12 +201,12 @@ Builder.prototype.stringify = function () {
 };
 
 Builder.prototype.combine = function (selector1, combinator, selector2) {
-    //????????????
-    return this;
+    var result=selector1;
+    result.str+=" "+combinator+" "+selector2.str;
+    return result;
 };
 
 const cssSelectorBuilder = {
-
     element: function (value) {
         return new Builder().element(value);
     },
@@ -180,8 +232,7 @@ const cssSelectorBuilder = {
     },
 
     combine: function (selector1, combinator, selector2) {
-        throw new Error('Not implemented');
-        //return new Builder().combine(selector1, combinator, selector2)
+        return new Builder().combine(selector1, combinator, selector2)
     },
 };
 
