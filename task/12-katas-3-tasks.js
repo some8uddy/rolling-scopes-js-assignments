@@ -10,13 +10,13 @@
  * @return {bool}
  *
  * @example
- *   var puzzle = [ 
+ *   var puzzle = [
  *      'ANGULAR',
  *      'REDNCAE',
  *      'RFIDTCL',
  *      'AGNEGSA',
  *      'YTIRTSP',
- *   ]; 
+ *   ];
  *   'ANGULAR'   => true   (first row)
  *   'REACT'     => true   (starting from the top-right R adn follow the ↓ ← ← ↓ )
  *   'UNDEFINED' => true
@@ -25,10 +25,42 @@
  *   'CLASS'     => true
  *   'ARRAY'     => true   (first column)
  *   'FUNCTION'  => false
- *   'NULL'      => false 
+ *   'NULL'      => false
  */
 function findStringInSnakingPuzzle(puzzle, searchStr) {
-    throw new Error('Not implemented');
+    let xLen = puzzle[0].length;
+    let yLen = puzzle.length;
+    let checked = Array.from({length: yLen}, function () {
+        return new Array(xLen).fill(false);
+    });
+    for (let x = 0; x < xLen; x++) {
+        for (let y = 0; y < yLen; y++) {
+            if (puzzle[y][x] == searchStr[0]) {
+                if (search(x, y, 0)) {
+                    return true;
+                }
+            }
+        }
+    }
+    function search(x, y, n) {
+        if (n + 1 == searchStr.length) return true;
+        checked[y][x] = true;
+        let nextLetter = searchStr[++n];
+        if (x + 1 < xLen && !checked[y][x + 1] && nextLetter == puzzle[y][x+1]) {
+            if (search(x+1, y, n)) return true;
+        }
+        if (y + 1 < yLen && !checked[y + 1][x] && nextLetter == puzzle[y+1][x]) {
+            if (search(x, y+1, n))  return true;
+        }
+        if (x > 0 && !checked[y][x - 1] && nextLetter == puzzle[y][x-1]) {
+            if (search(x-1, y, n)) return true;
+        }
+        if (y > 0 && !checked[y - 1][x] && nextLetter == puzzle[y-1][x]) {
+            if (search(x, y-1, n)) return true;
+        }
+        checked[y][x] = false;
+    }
+    return false;
 }
 
 
@@ -36,7 +68,7 @@ function findStringInSnakingPuzzle(puzzle, searchStr) {
  * Returns all permutations of the specified string.
  * Assume all chars in the specified string are different.
  * The order of permutations does not matter.
- * 
+ *
  * @param {string} chars
  * @return {Iterable.<string>} all posible strings constructed with the chars from the specfied string
  *
@@ -53,9 +85,9 @@ function* getPermutations(chars) {
  * Returns the most profit from stock quotes.
  * Stock quotes are stores in an array in order of date.
  * The stock profit is the difference in prices in buying and selling stock.
- * Each day, you can either buy one unit of stock, sell any number of stock units you have already bought, or do nothing. 
+ * Each day, you can either buy one unit of stock, sell any number of stock units you have already bought, or do nothing.
  * Therefore, the most profit is the maximum difference of all pairs in a sequence of stock prices.
- * 
+ *
  * @param {array} quotes
  * @return {number} max profit
  *
@@ -73,31 +105,31 @@ function getMostProfitFromStockQuotes(quotes) {
  * Class representing the url shorting helper.
  * Feel free to implement any algorithm, but do not store link in the key\value stores.
  * The short link can be at least 1.5 times shorter than the original url.
- * 
+ *
  * @class
  *
  * @example
- *    
+ *
  *     var urlShortener = new UrlShortener();
  *     var shortLink = urlShortener.encode('https://en.wikipedia.org/wiki/URL_shortening');
  *     var original  = urlShortener.decode(shortLink); // => 'https://en.wikipedia.org/wiki/URL_shortening'
- * 
+ *
  */
 function UrlShortener() {
-    this.urlAllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"+
-                           "abcdefghijklmnopqrstuvwxyz"+
-                           "0123456789-_.~!*'();:@&=+$,/?#[]";
+    this.urlAllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+        "abcdefghijklmnopqrstuvwxyz" +
+        "0123456789-_.~!*'();:@&=+$,/?#[]";
 }
 
 UrlShortener.prototype = {
 
-    encode: function(url) {
+    encode: function (url) {
         throw new Error('Not implemented');
     },
-    
-    decode: function(code) {
+
+    decode: function (code) {
         throw new Error('Not implemented');
-    } 
+    }
 }
 
 
